@@ -1,0 +1,85 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "synthesized-tdk.fullname" . }}-cron
+  labels:
+    {{- include "synthesized-tdk.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.cronJobLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronJobFailedJobsLimit }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "synthesized-tdk.labels" . | nindent 8 }}
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished }}
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+          {{- include "synthesized-tdk.labels" . | nindent 12 }}
+          {{- if .Values.cronJobPodLabels }}
+          {{- toYaml .Values.cronJobPodLabels | nindent 12 }}
+          {{- end }}
+          {{- if .Values.cronJobPodAnnotations }}
+          annotations:
+          {{- toYaml .Values.cronJobPodAnnotations | nindent 12 }}
+          {{- end }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- if .Values.serviceAccount.enabled }}
+          serviceAccountName: {{ include "synthesized-tdk.serviceAccountName" . }}
+          {{- end }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          restartPolicy: {{ .Values.restartPolicy }}
+          containers:
+            - name: "tdk-cli"
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              resources:
+              {{- toYaml .Values.resources | nindent 16 }}
+              volumeMounts:
+              {{- if .Values.volumeMounts }}
+              {{- toYaml .Values.volumeMounts | nindent 14 }}
+              {{- end }}
+              env:
+              {{- range $key, $val := .Values.env }}
+                - name: {{ $key }}
+                  value: {{ $val | quote }}
+              {{- end }}
+              envFrom:
+                - secretRef:
+                  {{- if .Values.secretRef}}
+                    name: {{ .Values.secretRef }}
+                  {{- else}}
+                    name: {{ include "synthesized-tdk.fullname" . }}-secret
+                  {{- end}}
+              {{- if .Values.securityContext }}
+              securityContext:
+                {{- toYaml .Values.containerSecurityContext | nindent 16 }}
+              {{- end }}
+
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumes:
+          {{- if .Values.volumes }}
+          {{- toYaml .Values.volumes | nindent 10 }}
+          {{- end }}
