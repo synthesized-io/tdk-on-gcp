@@ -87,13 +87,34 @@ sudo apt-get install helm
 ```
 export APP_INSTANCE_NAME=tdk-gramin
 export NAMESPACE=default
+export TAG="1.31.0"
+export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk-cli"
+export SYNTHESIZED_KEY="test_key"
+export RESOURCES_LIMITS_CPU=1
+export RESOURCES_LIMITS_MEMORY=1Gi
+```
+
+If you use a different namespace than the default, create a new namespace by running the following command:
+```
+kubectl create namespace "${NAMESPACE}"
+```
+
+### Creating the Service Account
+
+To create the Service Account and ClusterRoleBinding:
+```
+export TDK_SERVICE_ACCOUNT="${APP_INSTANCE_NAME}-serviceaccount"
+kubectl create serviceaccount "${TDK_SERVICE_ACCOUNT}" --namespace "${NAMESPACE}"
+kubectl create clusterrole "${TDK_SERVICE_ACCOUNT}-role" --verb=get,list,watch --resource=services,nodes,pods,namespaces
+kubectl create clusterrolebinding "${TDK_SERVICE_ACCOUNT}-rule" --clusterrole="${TDK_SERVICE_ACCOUNT}-role" --serviceaccount="${NAMESPACE}:${TDK_SERVICE_ACCOUNT}"
 ```
 
 
 
+### Expanding the manifest template
 
 ```
-helm template helm/synthesized-tdk \
+helm template chart/synthesized-tdk-cli \
   --name-template "${APP_INSTANCE_NAME}" \
   --namespace "${NAMESPACE}" \
   --set envRenderSecret.SYNTHESIZED_KEY="${SYNTHESIZED_KEY}" \
