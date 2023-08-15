@@ -109,7 +109,6 @@ helm template helm/synthesized-tdk \
 sudo chmod +x /var/run/docker.sock
 ```
 
-
 ```
 mpdev install --deployer=gcr.io/synthesized-marketplace-public/sdk-jupyter-server/deployer:2.7.6  --parameters='{"name": "sdk-jupyter-server", "namespace": "default"}'
 
