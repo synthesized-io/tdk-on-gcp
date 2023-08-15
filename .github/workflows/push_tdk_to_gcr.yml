@@ -11,6 +11,8 @@ on:
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
+  FROM_TAG: v1.31.0
+  TO_TAG: 1.31.0
   # MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -43,6 +45,6 @@ jobs:
       - name: Push image from Docker Hub to GHCR
         run: |
           docker buildx imagetools create \
-            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk-cli:latest \
-            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk-cli:1.31.0 \
-            synthesizedio/synthesized-tdk-cli:v1.31.0
+            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:latest \
+            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TO_TAG }} \
+            synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
