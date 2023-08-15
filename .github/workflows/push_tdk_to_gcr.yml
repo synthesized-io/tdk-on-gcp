@@ -3,6 +3,8 @@ name: Pull TDK from DockerHub and push to GCR
 on:
   workflow_dispatch: {}
   push:
+    branches:    
+      - '**'
     tags:
       - '*'
 
