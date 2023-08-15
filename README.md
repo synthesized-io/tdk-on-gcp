@@ -90,7 +90,7 @@ export NAMESPACE=default
 export TAG="1.31.0"
 export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk-cli"
 export SYNTHESIZED_KEY="test_key"
-export RESOURCES_LIMITS_CPU=1
+export RESOURCES_LIMITS_CPU=500m
 export RESOURCES_LIMITS_MEMORY=1Gi
 ```
 
@@ -114,17 +114,44 @@ kubectl create clusterrolebinding "${TDK_SERVICE_ACCOUNT}-rule" --clusterrole="$
 ### Expanding the manifest template
 
 ```
-helm template chart/synthesized-tdk-cli \
+helm template helm/synthesized-tdk-cli \
   --name-template "${APP_INSTANCE_NAME}" \
   --namespace "${NAMESPACE}" \
   --set envRenderSecret.SYNTHESIZED_KEY="${SYNTHESIZED_KEY}" \
   --set image.repository="${IMAGE_REGISTRY}" \
   --set image.tag="${TAG}" \
   --set resources.limits.cpu="${RESOURCES_LIMITS_CPU}" \
+  --set resources.requests.cpu="${RESOURCES_LIMITS_CPU}" \
   --set resources.limits.memory="${RESOURCES_LIMITS_MEMORY}" \
   > "${APP_INSTANCE_NAME}_manifest.yaml"
 ```
 
+
+### Applying the manifest to your Kubernetes cluster
+
+```
+kubectl apply -f "${APP_INSTANCE_NAME}_manifest.yaml" --namespace "${NAMESPACE}"
+```
+
+
+### Running the job
+
+```
+kubectl create job --from=cronjob.batch/tdk-gramin-synthesized-tdk-cron my-tdk-gramin-synthesized-tdk-cron -n "${NAMESPACE}"
+```
+
+Get pods:
+```
+kubectl get pods -n ${NAMESPACE}
+```
+
+Get pod logs:
+```
+kubectl logs ${POD_NAME} -n ${NAMESPACE}
+```
+
+
+### Run GCP deployer
 
 ```
 sudo chmod +x /var/run/docker.sock
