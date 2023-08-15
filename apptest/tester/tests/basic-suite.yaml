@@ -1,0 +1,20 @@
+actions:
+  - name: kubectl smoke test
+    bashTest:
+      script: kubectl version
+      expect:
+        exitCode:
+          equals: 0
+  - name: Wait for deployment get ready
+    bashTest:
+      script: |
+        kubectl wait --for=condition=Available=True --timeout=120s --namespace $NAMESPACE deploy ${APP_INSTANCE_NAME}-sdk
+      expect:
+        exitCode:
+          equals: 0
+  - name: API is available
+    bashTest:
+      script: curl ${APP_INSTANCE_NAME}-service.${NAMESPACE}.svc:8888/api
+      expect:
+        exitCode:
+          equals: 0
