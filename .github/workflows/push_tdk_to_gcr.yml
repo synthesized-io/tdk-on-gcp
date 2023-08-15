@@ -43,6 +43,6 @@ jobs:
       - name: Push image from Docker Hub to GHCR
         run: |
           docker buildx imagetools create \
-            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk:latest \
+            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk-cli:latest \
             --tag gcr.io/synthesized-marketplace-public/synthesized-tdk-cli:1.31.0 \
             synthesizedio/synthesized-tdk-cli:v1.31.0
