@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
-  APP_NAME: synthesized-tdk
+  APP_NAME: synthesized-tdk-cli
   # MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -39,3 +39,10 @@ jobs:
 
       - name: Authorize Docker push
         run: gcloud auth configure-docker
+
+      - name: Push image from Docker Hub to GHCR
+        run: |
+          docker buildx imagetools create \
+            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk:latest \
+            --tag gcr.io/synthesized-marketplace-public/synthesized-tdk-cli:1.31.0 \
+            synthesizedio/synthesized-tdk-cli:v1.31.0
