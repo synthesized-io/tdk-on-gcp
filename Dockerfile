@@ -7,7 +7,7 @@ ARG CHART_NAME
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gettext
 
-ADD chart/$CHART_NAME /tmp/chart
+ADD helm/$CHART_NAME /tmp/chart
 RUN cd /tmp && tar -czvf /tmp/$CHART_NAME.tar.gz chart
 
 ADD apptest/deployer/$CHART_NAME /tmp/test/chart
