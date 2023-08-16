@@ -10,8 +10,7 @@ on:
 
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
-  APP_NAME: synthesized-tdk-cli-deployer
-  CHART_NAME: synthesized-tdk-cli
+  APP_NAME: synthesized-tdk-cli
   MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -55,9 +54,9 @@ jobs:
           context: .
           build-args: |
             REGISTRY=${{ env.REGISTRY }}
-            APP_INSTANCE_NAME=${{ env.CHART_NAME }}
+            APP_INSTANCE_NAME=${{ env.APP_NAME }}
             MARKETPLACE_TOOLS_TAG=${{ env.MARKETPLACE_TOOLS_TAG }}
-            CHART_NAME=${{ env.CHART_NAME }}
+            CHART_NAME=${{ env.APP_NAME }}
             TAG=${{ github.ref_name }}
           push: true
           tags: |
@@ -89,7 +88,7 @@ jobs:
         id: gcr-meta
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
-          images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}-tester
+          images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/tester
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
