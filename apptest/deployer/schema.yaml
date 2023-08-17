@@ -1,6 +1,6 @@
 properties:
   testerImage:
     type: string
-    default: $REGISTRY/$APP_NAME-tester:$TAG
+    default: $REGISTRY/synthesized-tdk-cli/tester:$TAG
     x-google-property:
       type: IMAGE
