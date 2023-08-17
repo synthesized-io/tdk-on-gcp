@@ -33,7 +33,7 @@ properties:
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
-  serviceAccount:
+  serviceAccount.name:
     type: string
     title: Synthesized TDK Service Account
     x-google-marketplace:
