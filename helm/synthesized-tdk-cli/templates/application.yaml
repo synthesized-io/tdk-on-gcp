@@ -1,0 +1,37 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: {{ .Release.Name }}
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    app: {{ .Release.Name }}
+    name: {{ .Release.Name }}
+  annotations:
+    marketplace.cloud.google.com/deploy-info: '{"partner_id": "synthesized", "product_id": {{ .Chart.Name | quote }}, "partner_name": "Synthesized"}'
+spec:
+  descriptor:
+    type: SDK
+    version: "{{ .Values.image.tag }}"
+    description: |-
+      TDK is a DevOps' best friend for database masking, subsetting and generation.
+    maintainers:
+      - name: Synthesized
+        url: https://www.synthesized.io/
+    links:
+      - description: 'User Guide'
+        url: https://github.com/synthesized-io/tdk-on-gcp/blob/main/README.md
+    notes: |-
+      # Some notes ...
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}
+  addOwnerRef: true
+  componentKinds:
+    - group: v1
+      kind: Secret
+    - group: v1
+      kind: Service
+    - group: apps/v1
+      kind: Deployment
+    - group: app.k8s.io/v1beta1
+      kind: BackendConfig
