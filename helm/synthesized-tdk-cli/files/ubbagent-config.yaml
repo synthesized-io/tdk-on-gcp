@@ -35,12 +35,13 @@ endpoints:
 
 # The sources section lists metric data sources run by the agent itself. The currently-supported
 # source is 'heartbeat', which sends a defined value to a metric at a defined interval.
-sources:
-  - name: job-time
-    heartbeat:
-      metric: time
-      intervalSeconds: 5
-      value:
-        int64Value: 5
-      labels:
-        auto: true
+# NB: uncomment the below section to enable auto-reporting
+#sources:
+#  - name: job-time
+#    heartbeat:
+#      metric: time
+#      intervalSeconds: 5
+#      value:
+#        int64Value: 5
+#      labels:
+#        auto: true
