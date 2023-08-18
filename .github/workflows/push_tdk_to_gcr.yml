@@ -12,7 +12,7 @@ env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
   FROM_TAG: v1.31.0
-  TO_TAG: 1.31.0
+  TO_TAG: ${{ github.ref_name }}
   # MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
