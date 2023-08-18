@@ -14,7 +14,7 @@ RUN wget -q -O /bin/kubectl \
       && chmod 755 /bin/kubectl
 
 COPY tests/basic-suite.yaml /tests/basic-suite.yaml
-COPY tester.sh /tester.sh
+COPY --chmod=0755 tester.sh /tester.sh
 
 WORKDIR /
 ENTRYPOINT ["/tester.sh"]
