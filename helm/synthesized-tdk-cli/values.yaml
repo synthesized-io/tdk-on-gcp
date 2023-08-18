@@ -22,7 +22,7 @@ cronJobFailedJobsLimit: 1
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
@@ -41,10 +41,10 @@ containerSecurityContext: {}
 
 resources:
   limits:
-    cpu: 2000m
+    cpu: 500m
     memory: 2048Mi
   requests:
-    cpu: 1000m
+    cpu: 500m
     memory: 512Mi
 
 
