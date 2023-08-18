@@ -46,7 +46,7 @@ jobs:
         run: |
           docker buildx imagetools create \
             --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:latest \
-            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TO_TAG }} \
+            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TAG }} \
             synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
 
 
