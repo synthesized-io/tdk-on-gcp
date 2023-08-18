@@ -29,9 +29,11 @@ spec:
   componentKinds:
     - group: v1
       kind: Secret
-    - group: v1
-      kind: Service
+    - group: batch/v1
+      kind: CronJob
+    - group: batch/v1
+      kind: Job
     - group: apps/v1
       kind: Deployment
-    - group: app.k8s.io/v1beta1
-      kind: BackendConfig
+    - group: v1
+      kind: ServiceAccount
