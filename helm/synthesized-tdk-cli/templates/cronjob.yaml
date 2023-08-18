@@ -57,6 +57,8 @@ spec:
                 - name: {{ $key }}
                   value: {{ $val | quote }}
               {{- end }}
+                - name: UBBAGENT_PORT
+                  value: "{{ .Values.ubbagent.port }}"
               envFrom:
                 - secretRef:
                   {{- if .Values.secretRef}}
@@ -68,6 +70,37 @@ spec:
               securityContext:
                 {{- toYaml .Values.containerSecurityContext | nindent 16 }}
               {{- end }}
+            {{- if .Values.ubbagent.enabled }}
+            - name: "ubbagent"
+              image: "{{ .Values.ubbagent.image.repository }}:{{ .Values.ubbagent.image.tag }}"
+              env:
+                  - name: AGENT_CONFIG_FILE
+                    value: "{{ .Values.ubbagent.configDir }}/{{ .Values.ubbagent.configFile }}"
+                  - name: AGENT_ENCODED_KEY
+                    valueFrom:
+                      secretKeyRef:
+                        name: {{ .Values.reportingSecret }}
+                        key: reporting-key
+                  - name: AGENT_CONSUMER_ID
+                    valueFrom:
+                      secretKeyRef:
+                        name: {{ .Values.reportingSecret }}
+                        key: consumer-id
+                  - name: AGENT_LOCAL_PORT
+                    value: "{{ .Values.ubbagent.port }}"
+              volumeMounts:
+                  - name: ubbagent-config
+                    mountPath: {{ .Values.ubbagent.configDir }}
+              {{- end }}
+          {{- if .Values.ubbagent.enabled }}
+          volumes:
+            - name: ubbagent-config
+              configMap:
+                name: {{ .Release.Name }}-ubbagent-config
+          {{- end }}
+          {{- if .Values.volumes }}
+          {{- toYaml .Values.volumes | nindent 10 }}
+          {{- end }}
 
           {{- with .Values.nodeSelector }}
           nodeSelector:
@@ -80,8 +113,4 @@ spec:
           {{- with .Values.tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-          volumes:
-          {{- if .Values.volumes }}
-          {{- toYaml .Values.volumes | nindent 10 }}
           {{- end }}
