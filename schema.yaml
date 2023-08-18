@@ -43,6 +43,38 @@ properties:
     type: string
     x-google-marketplace:
       type: STRING
+
+  env.SYNTHESIZED_USERCONFIG_FILE:
+    title: Configuration file path. Analogue of the CLI --config-file option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_USERCONFIG:
+    title: Configuration YAML. If set, the variable SYNTHESIZED_USERCONFIG_FILE is ignored.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_INVENTORY_FILE:
+    title: Inventory file with information about using data sources. Analogue of the CLI --inventory-file option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_INVENTORY:
+    title: Inventory YAML. If set, the variable SYNTHESIZED_INVENTORY_FILE is ignored.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_COMMAND:
+    title: Analogue of the CLI command.
+    type: string
+    x-google-marketplace:
+      type: STRING
+
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
+
   serviceAccount.name:
     type: string
     title: Synthesized TDK Service Account
