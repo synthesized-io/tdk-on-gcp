@@ -103,8 +103,8 @@ ttlSecondsAfterFinished: 60
 ubbagent:
   enabled: true
   image:
-    repository:
-    tag:
+    repository: europe-west2-docker.pkg.dev/synthesized-marketplace-public/ubbagent/ubbagent
+    tag: latest
   port: 3456
   serviceControl:
     serviceName:
