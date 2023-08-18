@@ -94,6 +94,11 @@ export RESOURCES_LIMITS_CPU=500m
 export RESOURCES_LIMITS_MEMORY=1Gi
 ```
 
+```
+kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"
+```
+
+
 If you use a different namespace than the default, create a new namespace by running the following command:
 ```
 kubectl create namespace "${NAMESPACE}"
@@ -154,11 +159,30 @@ kubectl logs ${POD_NAME} -n ${NAMESPACE}
 ### Run GCP deployer
 
 ```
-sudo chmod +x /var/run/docker.sock
+sudo chmod 666 /var/run/docker.sock
 ```
 
+Install:
+```shell
+mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.7 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default"}'
 ```
-mpdev install --deployer=gcr.io/synthesized-marketplace-public/sdk-jupyter-server/deployer:2.7.6  --parameters='{"name": "sdk-jupyter-server", "namespace": "default"}'
 
-mpdev verify --deployer=gcr.io/synthesized-marketplace-public/sdk-jupyter-server/deployer:2.7.6
+Or verify:
+```shell
+mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.7
+```
+
+
+
+
+### TODO
+
+Add this logic to the `serviceAccount.yaml` file:
+```shell
+if Values.serviceAccount.name is not empty
+  # use the predefined account
+else if Values.serviceAccount.create == true
+  # create service acccount
+else
+  fail "If you want us to create a service account, please set Values.serviceAccount.create = true"
 ```
