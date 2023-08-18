@@ -1,50 +1,50 @@
-name: Pull TDK from DockerHub and push to GCR
+# name: Pull TDK from DockerHub and push to GCR
 
-on:
-  workflow_dispatch: {}
-  push:
-    branches:    
-      - '**'
-    tags:
-      - '*'
+# on:
+#   workflow_dispatch: {}
+#   push:
+#     branches:    
+#       - '**'
+#     tags:
+#       - '*'
 
-env:
-  REGISTRY: gcr.io/synthesized-marketplace-public
-  APP_NAME: synthesized-tdk-cli
-  FROM_TAG: v1.31.0
-  TO_TAG: 1.31.0
-  # MARKETPLACE_TOOLS_TAG: 0.11.8
+# env:
+#   REGISTRY: gcr.io/synthesized-marketplace-public
+#   APP_NAME: synthesized-tdk-cli
+#   FROM_TAG: v1.31.0
+#   TO_TAG: 1.31.0
+#   # MARKETPLACE_TOOLS_TAG: 0.11.8
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
 
-jobs:
-  pull-and-push-tdk:
-    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+# jobs:
+#   pull-and-push-tdk:
+#     # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       packages: write
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Authenticate GCloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_KEY }}
+#       - name: Authenticate GCloud
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: ${{ secrets.GCP_KEY }}
 
-      - name: Setup GCloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+#       - name: Setup GCloud SDK
+#         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Authorize Docker push
-        run: gcloud auth configure-docker
+#       - name: Authorize Docker push
+#         run: gcloud auth configure-docker
 
-      - name: Push image from Docker Hub to GHCR
-        run: |
-          docker buildx imagetools create \
-            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:latest \
-            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TO_TAG }} \
-            synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
+#       - name: Push image from Docker Hub to GHCR
+#         run: |
+#           docker buildx imagetools create \
+#             --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:latest \
+#             --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TO_TAG }} \
+#             synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
