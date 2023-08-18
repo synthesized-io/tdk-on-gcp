@@ -57,7 +57,6 @@ jobs:
             APP_INSTANCE_NAME=${{ env.APP_NAME }}
             MARKETPLACE_TOOLS_TAG=${{ env.MARKETPLACE_TOOLS_TAG }}
             CHART_NAME=${{ env.APP_NAME }}
-            TAG=${{ env.TAG }}
           push: true
           tags: ${{env.TAG}}
 
