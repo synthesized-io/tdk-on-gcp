@@ -8,7 +8,9 @@ actions:
   - name: Wait for deployment get ready
     bashTest:
       script: |
+        kubectl get pods -n $NAMESPACE
         kubectl wait --for=condition=Available=True --timeout=120s --namespace $NAMESPACE deploy ${APP_INSTANCE_NAME}-sdk
+        kubectl get pods -n $NAMESPACE
       expect:
         exitCode:
           equals: 0
