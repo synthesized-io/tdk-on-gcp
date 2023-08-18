@@ -172,6 +172,13 @@ default_config:
 safety_mode: RELAXED
 ```
 
+#### Configure schedule
+
+(Optional) Set schedule when calling TDK. You can use the following value to disable scheduled startup.
+```shell
+export SCHEDULE="* * 31 2 *"
+```
+
 #### Expanding the manifest template
 
 Use `helm template` to expand the template. We recommend that you save the
@@ -183,6 +190,7 @@ helm template chart/synthesized-tdk-cli \
   --namespace "${NAMESPACE}" \
   --set image.repository="${IMAGE_REGISTRY}" \
   --set image.tag="${TAG}" \
+  --set schedule="${SCHEDULE}" \
   --set resources.limits.cpu="${RESOURCES_LIMITS_CPU}" \
   --set resources.limits.memory="${RESOURCES_LIMITS_MEMORY}" \
   --set-file env.SYNTHESIZED_USERCONFIG="synthesized_config.yaml" \
