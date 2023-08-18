@@ -37,12 +37,12 @@ properties:
     title: Input DB URL
     type: string
     x-google-marketplace:
-      type: string
+      type: STRING
   env.SYNTHESIZED_OUTPUT_URL:
     title: Output DB URL
     type: string
     x-google-marketplace:
-      type: string
+      type: STRING
   serviceAccount.name:
     type: string
     title: Synthesized TDK Service Account
