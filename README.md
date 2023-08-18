@@ -25,12 +25,22 @@ This can be:
 * [GENERATION](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/generation)
 * [KEEP](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/subsetting)
 
+For example, the following config can be used:
+```yaml
+default_config:
+  mode: MASKING
+safety_mode: RELAXED
+```
+
 ## Quick install with Google Cloud Marketplace
 
 To install Synthesized TDK to a Google Kubernetes Engine cluster via Google Cloud Marketplace, follow the
 [on-screen instructions](https://console.cloud.google.com/marketplace/product/synthesized-marketplace-public/synthesized-tdk).
 
 ## Command-line instructions
+
+> **_NOTE:_**  The CLI installation is only available if you have successfully deployed TDK from the marketplace 
+> and reporting service key was generated.
 
 ### Prerequisites
 
@@ -113,7 +123,7 @@ Set up the image tag.
 Example:
 
 ```shell
-export TAG="1.31.0"
+export TAG="1.32.0"
 ```
 
 Configure the container images:
@@ -182,6 +192,7 @@ helm template chart/synthesized-tdk-cli \
   --set envRenderSecret.SYNTHESIZED_OUTPUT_URL="${SYNTHESIZED_OUTPUT_URL}" \
   --set envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME="${SYNTHESIZED_OUTPUT_USERNAME}" \
   --set envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD="${SYNTHESIZED_OUTPUT_PASSWORD}" \
+  --set reportingSecret="${APP_INSTANCE_NAME}-reporting-secret" \
   > "${APP_INSTANCE_NAME}_manifest.yaml"
 ```
 
