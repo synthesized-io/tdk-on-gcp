@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
+  TAG: 1.31.0
   MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -19,7 +20,7 @@ concurrency:
 
 jobs:
   build-and-push-deployer:
-    if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,14 +58,14 @@ jobs:
             APP_INSTANCE_NAME=${{ env.APP_NAME }}
             MARKETPLACE_TOOLS_TAG=${{ env.MARKETPLACE_TOOLS_TAG }}
             CHART_NAME=${{ env.APP_NAME }}
-            TAG=${{ github.ref_name }}
+            TAG=${{ env.TAG }}
           push: true
           tags: |
             ${{ steps.gcr-meta.outputs.tags }}
 
 
   build-and-push-tester:
-    if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read

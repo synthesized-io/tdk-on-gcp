@@ -12,7 +12,7 @@ env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
   FROM_TAG: v1.31.0
-  TO_TAG: ${{ github.ref_name }}
+  TO_TAG: 1.31.0
   # MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   pull-and-push-tdk:
-    if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
