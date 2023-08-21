@@ -142,7 +142,7 @@ kubectl apply -f "${APP_INSTANCE_NAME}_manifest.yaml" --namespace "${NAMESPACE}"
 ### Running the job
 
 ```
-kubectl create job --from=cronjob.batch/tdk-gramin-synthesized-tdk-cron my-tdk-gramin-synthesized-tdk-cron -n "${NAMESPACE}"
+kubectl create job --from=cronjob.batch/synthesized-tdk-cli-cron my-tdk-gramin-synthesized-tdk-cron -n "${NAMESPACE}"
 ```
 
 Get pods:
@@ -164,15 +164,22 @@ sudo chmod 666 /var/run/docker.sock
 
 Install:
 ```shell
-mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.7 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default"}'
+export SYNTHESIZED_KEY = AbGt3...
+
+mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_KEY": $SYNTHESIZED_KEY}'
 ```
 
 Or verify:
 ```shell
-mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.7
+mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22
 ```
 
-
+Delete kube resources:
+```
+kubectl delete pods --all -n default
+kubectl delete jobs --all -n default
+kubectl delete cronjobs --all -n default
+```
 
 
 ### TODO
