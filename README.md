@@ -115,8 +115,8 @@ Choose an instance name and
 for the app.
 
 ```shell
-export APP_INSTANCE_NAME=synthesized-tdk
-export NAMESPACE=synthesized-tdk
+export APP_INSTANCE_NAME=synthesized-tdk-cli
+export NAMESPACE=synthesized-tdk-cli
 ```
 
 Set up the image tag.
@@ -129,7 +129,7 @@ export TAG="1.32.0"
 Configure the container images:
 
 ```shell
-export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk"
+export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk-cli"
 ```
 
 (Optional) Set computation resources limit:
@@ -185,7 +185,7 @@ Use `helm template` to expand the template. We recommend that you save the
 expanded manifest file for future updates to your app.
 
 ```shell
-helm template chart/synthesized-tdk-cli \
+helm template helm/synthesized-tdk-cli \
   --name-template "${APP_INSTANCE_NAME}" \
   --namespace "${NAMESPACE}" \
   --set image.repository="${IMAGE_REGISTRY}" \
@@ -260,8 +260,8 @@ At the moment, the application does not support exporting Prometheus metrics and
 Set your installation name and Kubernetes namespace:
 
 ```shell
-export APP_INSTANCE_NAME=synthesized-tdk
-export NAMESPACE=default
+export APP_INSTANCE_NAME=synthesized-tdk-cli
+export NAMESPACE=synthesized-tdk-cli
 ```
 
 ### Deleting your resources
