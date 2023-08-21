@@ -59,16 +59,6 @@ restartPolicy: Never
 # -- Environment variables.
 # List of supported variables: https://docs.synthesized.io/tdk/latest/user_guide/reference/docker_environment_variables
 env: {}
-  # - name: AGENT_ENCODED_KEY
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: {{ .Values.reportingSecret }}
-  #       key: reporting-key
-  # - name: AGENT_CONSUMER_ID
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: {{ .Values.reportingSecret }}
-  #       key: consumer-id
 # Synthesized config https://docs.synthesized.io/tdk/latest/user_guide/reference/configuration_reference
 #  SYNTHESIZED_USERCONFIG: |
 #    default_config:
