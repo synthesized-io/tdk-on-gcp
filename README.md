@@ -1,196 +1,286 @@
-# tdk-on-gcp
+# Overview
+
 Public repository for the configuration files, user guide, and other resources to run the Synthesized TDK on GCP
 
+[What is Synthesized TDK?](https://docs.synthesized.io/tdk/latest/user_guide/getting_started/what_is_tdk)
 
+Available on the GCP Cloud Marketplace: https://console.cloud.google.com/marketplace/product/synthesized-marketplace-public/synthesized-tdk
 
-Install Docker rootless: https://docs.docker.com/engine/install/ubuntu
+# Installation
 
-Remove preinstalled `gcloud` tool:
+After installation is done, the TDK CronJob should be created.
+
+## Prerequisites
+### Databases
+Please check the list of supported database dialects: https://docs.synthesized.io/tdk/latest/#_whats_included.
+
+It is assumed that there are two databases: input and output.
+You must know the [JDBC URL](https://en.wikipedia.org/wiki/Java_Database_Connectivity), username and password for each.
+
+### Synthesized config
+The Synthesized YAML configuration should be provided. 
+
+This can be: 
+* [MASKING](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/masking)
+* [GENERATION](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/generation)
+* [KEEP](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/subsetting)
+
+For example, the following config can be used:
+```yaml
+default_config:
+  mode: MASKING
+safety_mode: RELAXED
 ```
-sudo snap remove google-cloud-cli
+
+## Quick install with Google Cloud Marketplace
+
+To install Synthesized TDK to a Google Kubernetes Engine cluster via Google Cloud Marketplace, follow the
+[on-screen instructions](https://console.cloud.google.com/marketplace/product/synthesized-marketplace-public/synthesized-tdk).
+
+## Command-line instructions
+
+> **_NOTE:_**  The CLI installation is only available if you have successfully deployed TDK from the marketplace 
+> and reporting service key was generated.
+
+### Prerequisites
+
+#### Setting up command-line tools
+
+You need the following tools in your development environment:
+
+- [gcloud](https://cloud.google.com/sdk/gcloud/)
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/)
+- [Docker](https://docs.docker.com/install/)
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Helm](https://helm.sh/)
+
+Configure `gcloud` as a Docker credential helper:
+
+```shell
+gcloud auth configure-docker
 ```
 
-install gcloud from tar archive - https://cloud.google.com/sdk/docs/install#linux
+#### Creating a Google Kubernetes Engine (GKE) cluster
 
+Create a new cluster from the command line. Please note that the BigQuery scope is required.
+You can change values of the properties CLUSTER and ZONE.
 
-Now you can switch gcloud to using the Service Account by creating and downloading a one-time key, and activate it:
-```
-gcloud iam service-accounts keys create ./marketplace-dev-robot-key.json \
-  --iam-account marketplace-dev-robot@synthesized-marketplace-public.iam.gserviceaccount.com
-
-gcloud auth activate-service-account \
-  --key-file ./marketplace-dev-robot-key.json
-```
-
-Change the project:
-```
-gcloud config set project synthesized-marketplace-public
-```
-
-Install gke-gcloud-auth-plugin (see more in https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke):
-```
-gcloud components install gke-gcloud-auth-plugin
-```
-
-
-Create a new cluster from the command-line:
-```
-export CLUSTER=gramin-tdk-cluster
-export ZONE=europe-west2-a
+```shell
+export CLUSTER=tdk-cluster
+export ZONE=us-west1-a
 
 gcloud container clusters create "${CLUSTER}" --zone "${ZONE}"
 ```
 
+Configure `kubectl` to connect to the new cluster:
 
-
-```
-docker pull gcr.io/cloud-marketplace-tools/k8s/dev
-
-mkdir bin
-
-BIN_FILE="$HOME/bin/mpdev"
-docker run \
-  gcr.io/cloud-marketplace-tools/k8s/dev \
-  cat /scripts/dev > "$BIN_FILE"
-chmod +x "$BIN_FILE"
+```shell
+gcloud container clusters get-credentials "${CLUSTER}" --zone "${ZONE}"
 ```
 
-Run mpdev and wait the "It works" message:
-```
-bin/mpdev
+#### Cloning this repo
+
+Clone this repo, as well as its associated tools repo:
+
+```shell
+git clone --recursive https://github.com/synthesized-io/tdk-on-gcp.git
 ```
 
+#### Installing the Application resource definition
 
-Install kubectl:
-```
-gcloud components install kubectl
-```
+An Application resource is a collection of individual Kubernetes
+components, such as Services, Deployments, and so on, that you can
+manage as a group.
 
-Or:
-```
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-```
+To set up your cluster to understand Application resources, run the
+following command:
 
-
-Install helm:
-```
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-sudo apt-get install apt-transport-https --yes
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
-sudo apt-get install helm
-```
-
-
-
-```
-export APP_INSTANCE_NAME=tdk-gramin
-export NAMESPACE=default
-export TAG="1.31.0"
-export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk-cli"
-export SYNTHESIZED_KEY="test_key"
-export RESOURCES_LIMITS_CPU=500m
-export RESOURCES_LIMITS_MEMORY=1Gi
-```
-
-```
+```shell
 kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"
 ```
 
+You need to run this command once.
 
-If you use a different namespace than the default, create a new namespace by running the following command:
+The Application resource is defined by the
+[Kubernetes SIG-apps](https://github.com/kubernetes/community/tree/master/sig-apps)
+community. You can find the source code at
+[github.com/kubernetes-sigs/application](https://github.com/kubernetes-sigs/application).
+
+### Installing the app
+
+#### Configuring the app with environment variables
+
+Choose an instance name and
+[namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+for the app.
+
+```shell
+export APP_INSTANCE_NAME=synthesized-tdk-cli
+export NAMESPACE=synthesized-tdk-cli
 ```
+
+Set up the image tag.
+Example:
+
+```shell
+export TAG="1.32.0"
+```
+
+Configure the container images:
+
+```shell
+export IMAGE_REGISTRY="gcr.io/synthesized-marketplace-public/synthesized-tdk-cli"
+```
+
+(Optional) Set computation resources limit:
+
+```shell
+export RESOURCES_LIMITS_CPU=1
+export RESOURCES_LIMITS_MEMORY=1Gi
+```
+
+If you use a different namespace than the `default`, create a new namespace by running the following command:
+
+```shell
 kubectl create namespace "${NAMESPACE}"
 ```
 
-### Creating the Service Account
+#### Configuring database URLs and credentials
 
-To create the Service Account and ClusterRoleBinding:
+Please replace the values and run:
+```shell
+export SYNTHESIZED_INPUT_URL={YOUR_INPUT_JDBC_URL}
+export SYNTHESIZED_INPUT_USERNAME={YOUR_INPUT_USERNAME}
+export SYNTHESIZED_INPUT_PASSWORD={YOUR_INPUT_PASSWORD}
+export SYNTHESIZED_OUTPUT_URL={YOUR_OUTPUT_JDBC_URL}
+export SYNTHESIZED_OUTPUT_USERNAME={YOUR_OUTPUT_USERNAME}
+export SYNTHESIZED_OUTPUT_PASSWORD={YOUR_OUTPUT_PASSWORD}
 ```
-export TDK_SERVICE_ACCOUNT="${APP_INSTANCE_NAME}-serviceaccount"
-kubectl create serviceaccount "${TDK_SERVICE_ACCOUNT}" --namespace "${NAMESPACE}"
-kubectl create clusterrole "${TDK_SERVICE_ACCOUNT}-role" --verb=get,list,watch --resource=services,nodes,pods,namespaces
-kubectl create clusterrolebinding "${TDK_SERVICE_ACCOUNT}-rule" --clusterrole="${TDK_SERVICE_ACCOUNT}-role" --serviceaccount="${NAMESPACE}:${TDK_SERVICE_ACCOUNT}"
+
+#### Creating Synthesized transformation configuration
+
+Create configuration file:
+```shell
+touch synthesized_config.yaml
 ```
 
+Fill the `synthesized_config.yaml` with [MASKING](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/masking), [GENERATION](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/generation) or [KEEP](https://docs.synthesized.io/tdk/latest/user_guide/tutorial/subsetting) config, e.g:
 
-
-### Expanding the manifest template
-
+```yaml
+default_config:
+  mode: MASKING
+safety_mode: RELAXED
 ```
+
+#### Configure schedule
+
+(Optional) Set schedule when calling TDK. You can use the following value to disable scheduled startup.
+```shell
+export SCHEDULE="* * 31 2 *"
+```
+
+#### Expanding the manifest template
+
+Use `helm template` to expand the template. We recommend that you save the
+expanded manifest file for future updates to your app.
+
+```shell
 helm template helm/synthesized-tdk-cli \
   --name-template "${APP_INSTANCE_NAME}" \
   --namespace "${NAMESPACE}" \
-  --set envRenderSecret.SYNTHESIZED_KEY="${SYNTHESIZED_KEY}" \
   --set image.repository="${IMAGE_REGISTRY}" \
   --set image.tag="${TAG}" \
+  --set schedule="${SCHEDULE}" \
   --set resources.limits.cpu="${RESOURCES_LIMITS_CPU}" \
-  --set resources.requests.cpu="${RESOURCES_LIMITS_CPU}" \
   --set resources.limits.memory="${RESOURCES_LIMITS_MEMORY}" \
+  --set-file env.SYNTHESIZED_USERCONFIG="synthesized_config.yaml" \
+  --set envRenderSecret.SYNTHESIZED_INPUT_URL="${SYNTHESIZED_INPUT_URL}" \
+  --set envRenderSecret.SYNTHESIZED_INPUT_USERNAME="${SYNTHESIZED_INPUT_USERNAME}" \
+  --set envRenderSecret.SYNTHESIZED_INPUT_PASSWORD="${SYNTHESIZED_INPUT_PASSWORD}" \
+  --set envRenderSecret.SYNTHESIZED_OUTPUT_URL="${SYNTHESIZED_OUTPUT_URL}" \
+  --set envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME="${SYNTHESIZED_OUTPUT_USERNAME}" \
+  --set envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD="${SYNTHESIZED_OUTPUT_PASSWORD}" \
+  --set reportingSecret="${APP_INSTANCE_NAME}-reporting-secret" \
   > "${APP_INSTANCE_NAME}_manifest.yaml"
 ```
 
+#### Applying the manifest to your Kubernetes cluster
 
-### Applying the manifest to your Kubernetes cluster
+To apply the manifest to your Kubernetes cluster, use `kubectl`:
 
-```
+```shell
 kubectl apply -f "${APP_INSTANCE_NAME}_manifest.yaml" --namespace "${NAMESPACE}"
 ```
 
+#### Viewing your app in the Google Cloud Console
 
-### Running the job
+To get the Cloud Console URL for your app, run the following command:
 
-```
-kubectl create job --from=cronjob.batch/synthesized-tdk-cli-cron my-tdk-gramin-synthesized-tdk-cron -n "${NAMESPACE}"
-```
-
-Get pods:
-```
-kubectl get pods -n ${NAMESPACE}
-```
-
-Get pod logs:
-```
-kubectl logs ${POD_NAME} -n ${NAMESPACE}
-```
-
-
-### Run GCP deployer
-
-```
-sudo chmod 666 /var/run/docker.sock
-```
-
-Install:
 ```shell
-export SYNTHESIZED_KEY="AbGt3..."
-export POSTGRES_PASSWORD="strong_postgres_password..."
+export SYNTHESIZED_KEY = AbGt3...
 
-mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.31.0 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "$POSTGRES_PASSWORD", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "$POSTGRES_PASSWORD", "envRenderSecret.SYNTHESIZED_KEY": "$SYNTHESIZED_KEY"}'
+mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_KEY": $SYNTHESIZED_KEY}'
 ```
 
-Or verify:
+After Synthesized TDK is Installed you can either run the job manually or wait when cronjob is triggered by schedule. 
+
+To trigger the cronjob manually run:
 ```shell
-mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.31.0
+mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22
 ```
 
-Delete kube resources:
-```
-kubectl delete pods --all -n default
-kubectl delete jobs --all -n default
-kubectl delete cronjobs --all -n default
-```
-
-
-### TODO
-
-Add this logic to the `serviceAccount.yaml` file:
+To see logs for the job run (use "JOB NAME" from the previous step):
 ```shell
-if Values.serviceAccount.name is not empty
-  # use the predefined account
-else if Values.serviceAccount.create == true
-  # create service acccount
-else
-  fail "If you want us to create a service account, please set Values.serviceAccount.create = true"
+kubectl logs -f jobs/{JOB NAME} -n ${NAMESPACE}
+```
+
+# App metrics
+
+At the moment, the application does not support exporting Prometheus metrics and does not have any exporter.
+
+# Uninstalling the app
+
+## Using the Google Cloud Console
+
+1.  In the Cloud Console, open
+    [Kubernetes Applications](https://console.cloud.google.com/kubernetes/application).
+
+2.  From the list of apps, choose your app installation.
+
+3.  On the **Application Details** page, click **Delete**.
+
+## Using the command-line
+
+### Preparing your environment
+
+Set your installation name and Kubernetes namespace:
+
+```shell
+export APP_INSTANCE_NAME=synthesized-tdk-cli
+export NAMESPACE=synthesized-tdk-cli
+```
+
+### Deleting your resources
+
+> **NOTE:** We recommend using a `kubectl` version that is the same as the
+> version of your cluster. Using the same version for `kubectl` and the cluster
+> helps to avoid unforeseen issues.
+
+#### Deleting the deployment with the generated manifest file
+
+Run `kubectl` on the expanded manifest file:
+
+```shell
+kubectl delete -f ${APP_INSTANCE_NAME}_manifest.yaml --namespace ${NAMESPACE}
+```
+
+#### Deleting the deployment by deleting the Application resource
+
+If you don't have the expanded manifest file, delete the resources by using
+types and a label:
+
+```shell
+kubectl delete application,secret,cronjob,job \
+  --namespace ${NAMESPACE} \
+  --selector name=${APP_INSTANCE_NAME}
 ```

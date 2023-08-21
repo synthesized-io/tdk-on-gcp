@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: 
+  repository:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -41,11 +41,11 @@ containerSecurityContext: {}
 
 resources:
   limits:
-    cpu: 500m
-    memory: 2048Mi
+    cpu:
+    memory:
   requests:
-    cpu: 500m
-    memory: 512Mi
+    cpu:
+    memory:
 
 
 nodeSelector: {}
