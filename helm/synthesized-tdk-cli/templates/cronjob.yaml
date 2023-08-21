@@ -57,21 +57,21 @@ spec:
                 - name: {{ $key }}
                   value: {{ $val | quote }}
               {{- end }}
-                - name: REPORTING_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Values.reportingSecret }}
-                      key: reporting-key
-                - name: CONSUMER_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Values.reportingSecret }}
-                      key: consumer-id
-                - name: ENTITLEMENT_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Values.reportingSecret }}
-                      key: entitlement-id
+                # - name: REPORTING_KEY
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: {{ .Values.reportingSecret }}
+                #       key: reporting-key
+                # - name: CONSUMER_ID
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: {{ .Values.reportingSecret }}
+                #       key: consumer-id
+                # - name: ENTITLEMENT_ID
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: {{ .Values.reportingSecret }}
+                #       key: entitlement-id
               envFrom:
                 - secretRef:
                   {{- if .Values.secretRef}}
