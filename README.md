@@ -217,21 +217,17 @@ kubectl apply -f "${APP_INSTANCE_NAME}_manifest.yaml" --namespace "${NAMESPACE}"
 To get the Cloud Console URL for your app, run the following command:
 
 ```shell
-echo "https://console.cloud.google.com/kubernetes/application/${ZONE}/${CLUSTER}/${NAMESPACE}/${APP_INSTANCE_NAME}"
+export SYNTHESIZED_KEY = AbGt3...
+
+mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_KEY": $SYNTHESIZED_KEY}'
 ```
-
-To view the app, open the URL in your browser.
-
-# Using the app
-
-## How to use TDK
 
 After Synthesized TDK is Installed you can either run the job manually or wait when cronjob is triggered by schedule. 
 
 To trigger the cronjob manually run:
 ```shell
-kubectl create job --from=cronjob/${APP_INSTANCE_NAME}-cron ${APP_INSTANCE_NAME}-cron -n ${NAMESPACE}
-``` 
+mpdev verify --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22
+```
 
 To see logs for the job run (use "JOB NAME" from the previous step):
 ```shell
