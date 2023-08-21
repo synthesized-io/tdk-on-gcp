@@ -8,7 +8,7 @@ actions:
   - name: Wait for deployment get ready
     bashTest:
       script: |
-        kubectl get pod ${APP_INSTANCE_NAME}-cron
+        kubectl get pod ${APP_INSTANCE_NAME}-synthesized-tdk-cron
       expect:
         exitCode:
           equals: 0
