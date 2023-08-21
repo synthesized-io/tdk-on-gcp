@@ -8,7 +8,7 @@ actions:
   - name: Wait for deployment get ready
     bashTest:
       script: |
-        kubectl get pod ${APP_INSTANCE_NAME}-deployer
+        kubectl get pod ${APP_INSTANCE_NAME}
       expect:
         exitCode:
           equals: 0
