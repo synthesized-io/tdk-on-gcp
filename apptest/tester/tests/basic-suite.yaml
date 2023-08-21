@@ -5,7 +5,7 @@ actions:
       expect:
         exitCode:
           equals: 0
-  - name: Wait for deployment get ready
+  - name: Check cronjob
     bashTest:
       script: |
         kubectl get cronjob ${APP_INSTANCE_NAME}-synthesized-tdk-cron
