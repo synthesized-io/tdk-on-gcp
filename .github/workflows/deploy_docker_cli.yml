@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - '*'
+    branches:
+      - 'fix-ci'
 
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
