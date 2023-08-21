@@ -165,8 +165,9 @@ sudo chmod 666 /var/run/docker.sock
 Install:
 ```shell
 export SYNTHESIZED_KEY = AbGt3...
+export POSTGRES_PASSWORD = strong_postgres_password...
 
-mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "Kvuc]x;Z(7LBS9jt", "envRenderSecret.SYNTHESIZED_KEY": $SYNTHESIZED_KEY}'
+mpdev install --deployer=gcr.io/synthesized-marketplace-public/synthesized-tdk-cli/deployer:1.0.22 --parameters='{"name": "synthesized-tdk-cli", "namespace": "default", "env.SYNTHESIZED_INPUT_URL": "jdbc:postgresql://10.91.48.3:5432/input_db", "env.SYNTHESIZED_OUTPUT_URL": "jdbc:postgresql://10.91.48.3:5432/output_db", "envRenderSecret.SYNTHESIZED_INPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_INPUT_PASSWORD": "$POSTGRES_PASSWORD", "envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME": "postgres", "envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD": "$POSTGRES_PASSWORD", "envRenderSecret.SYNTHESIZED_KEY": "$SYNTHESIZED_KEY"}'
 ```
 
 Or verify:
