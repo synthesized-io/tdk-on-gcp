@@ -53,7 +53,7 @@ jobs:
       - name: Push image from Docker Hub to GHCR
         run: |
           # Split the tags into an array
-          tag_array=${{ steps.gcr-meta.outputs.tags }}
+          read -a tag_array <<< "${{ steps.gcr-meta.outputs.tags }}"
           
           docker_cmd="docker buildx imagetools create"
           
@@ -61,7 +61,7 @@ jobs:
             docker_cmd+=" --tag $tag"
           done
           
-          docker_cmd+=" synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
+          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
           echo "$docker_cmd"
           eval "$docker_cmd"
 
