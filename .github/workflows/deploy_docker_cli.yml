@@ -44,20 +44,29 @@ jobs:
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
           images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/tester
+          flavor: |
+            latest=false
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Push image from Docker Hub to GHCR
         run: |
-          docker buildx imagetools create \
-            --tag ${{ steps.gcr-meta.outputs.tags }} \
-            synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
+          # Split the tags into an array
+          read -a tag_array <<< ${{ steps.gcr-meta.outputs.tags }}
+          
+          docker_cmd="docker buildx imagetools create"
+          
+          for tag in "${tag_array[@]}"; do
+            docker_cmd+=" --tag $tag"
+          done
+          
+          docker_cmd+=" synthesizedio/${APP_NAME}:${FROM_TAG}"
+          eval "$docker_cmd"
 
 
   build-and-push-deployer:
     # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
-    needs: push-tdk
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -82,6 +91,8 @@ jobs:
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
           images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/deployer
+          flavor: |
+            latest=false
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -103,7 +114,6 @@ jobs:
 
   build-and-push-tester:
     # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
-    needs: push-tdk
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -128,6 +138,8 @@ jobs:
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
           images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/tester
+          flavor: |
+            latest=false
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
