@@ -61,7 +61,8 @@ jobs:
             docker_cmd+=" --tag $tag"
           done
           
-          docker_cmd+=" synthesizedio/${APP_NAME}:${FROM_TAG}"
+          docker_cmd+=" synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
+          echo "$docker_cmd"
           eval "$docker_cmd"
 
 
