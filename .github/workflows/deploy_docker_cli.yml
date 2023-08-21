@@ -52,22 +52,22 @@ jobs:
 
       - name: Push image from Docker Hub to GHCR
         run: |
-          # Split the tags into an array
           IFS=$'\n' read -rd '' -a tag_array <<< "${{ steps.gcr-meta.outputs.tags }}"
           
           docker_cmd="docker buildx imagetools create"
           
           for tag in "${tag_array[@]}"; do
-            docker_cmd+=" --tag $tag"
+          docker_cmd+=" --tag $tag"
           done
           
-          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
+          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}"
+          
           echo "$docker_cmd"
-          eval "$docker_cmd"
+#          eval "$docker_cmd"
 
 
   build-and-push-deployer:
-    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    if: ${{ contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -114,7 +114,7 @@ jobs:
 
 
   build-and-push-tester:
-    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    if: ${{ contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
