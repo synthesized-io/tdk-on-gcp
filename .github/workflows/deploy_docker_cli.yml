@@ -11,6 +11,8 @@ on:
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
+  FROM_TAG: v1.31.0
+  TAG: 1.31.0
   MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -18,8 +20,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  push-tdk:
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate GCloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_KEY }}
+
+      - name: Setup GCloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+
+      - name: Push image from Docker Hub to GHCR
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:latest \
+            --tag ${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{ env.TAG }} \
+            synthesizedio/${{ env.APP_NAME }}:${{ env.FROM_TAG }}
+
+
   build-and-push-deployer:
-    if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    needs: push-tdk
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -44,9 +77,7 @@ jobs:
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
           images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/deployer
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+          tags: ${{ env.TAG }}
 
       - name: Build and push
         uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825
@@ -57,14 +88,15 @@ jobs:
             APP_INSTANCE_NAME=${{ env.APP_NAME }}
             MARKETPLACE_TOOLS_TAG=${{ env.MARKETPLACE_TOOLS_TAG }}
             CHART_NAME=${{ env.APP_NAME }}
-            TAG=${{ github.ref_name }}
+            TAG=${{ env.TAG }}
           push: true
           tags: |
             ${{ steps.gcr-meta.outputs.tags }}
 
 
   build-and-push-tester:
-    if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    # if: ${{ !contains(github.ref_name, '-') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
+    needs: push-tdk
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -89,9 +121,7 @@ jobs:
         uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
         with:
           images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}/tester
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+          tags: ${{ env.TAG }}
 
       - name: Build and push
         uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825
