@@ -1,0 +1,5 @@
+1. Synthesized TDK is Installed.
+2. To trigger the cronjob manually run:
+   kubectl create job --from=cronjob/{{ include "synthesized-tdk.fullname" . }}-cron {{ include "synthesized-tdk.fullname" . }}-cron -n {{ .Release.Namespace }}
+3. To see logs for the job run:
+   kubectl logs -f jobs/{JOB NAME} -n {{ .Release.Namespace }}

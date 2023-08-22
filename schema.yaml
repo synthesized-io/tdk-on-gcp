@@ -1,0 +1,167 @@
+x-google-marketplace:
+  schemaVersion: v2
+
+  applicationApiVersion: v1beta1
+
+  publishedVersion: "$TAG"
+  publishedVersionMetadata:
+    releaseNote: >-
+      Initial release.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  images:
+    '':
+      properties:
+        image.repository:
+          type: REPO_WITH_REGISTRY
+        image.tag:
+          type: TAG
+
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+
+  env.SYNTHESIZED_USERCONFIG_FILE:
+    title: Configuration file path. Analogue of the CLI --config-file option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_USERCONFIG:
+    title: Configuration YAML. If set, the variable SYNTHESIZED_USERCONFIG_FILE is ignored.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_INVENTORY_FILE:
+    title: Inventory file with information about using data sources. Analogue of the CLI --inventory-file option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  env.SYNTHESIZED_INVENTORY:
+    title: Inventory YAML. If set, the variable SYNTHESIZED_INVENTORY_FILE is ignored.
+    type: string
+    x-google-marketplace:
+      type: STRING
+
+  env.SYNTHESIZED_INPUT_URL:
+    title: JDBC URL to the INPUT database. Analogue of the CLI --input-url option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  envRenderSecret.SYNTHESIZED_INPUT_USERNAME:
+    title: Input username, default to null. Analogue of the CLI --input-username option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_INPUT_USERNAME_SECRET:
+    title: Input username secret in JSON format, default to null. Analogue of the CLI --input-username-secret option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_INPUT_PASSWORD:
+    title: Input password, default to null. Analogue of the CLI --input-password option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_INPUT_PASSWORD_SECRET:
+    title: Input password secret in JSON format, default to null. Analogue of the CLI --input-password-secret option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+
+  env.SYNTHESIZED_OUTPUT_URL:
+    title: JDBC URL to the OUTPUT database. Analogue of the CLI --output-url option.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME:
+    title: Output username, default to null. Analogue of the CLI --output-username option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME_SECRET:
+    title:  Output username secret in JSON format, default to null. Analogue of the CLI --output-username-secret option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD:
+    title: Output password, default to null. Analogue of the CLI --output-password option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD_SECRET:
+    title: Output password secret in JSON format, default to null. Analogue of the CLI --output-password-secret option.
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+
+  env.SYNTHESIZED_COMMAND:
+    title: Analogue of the CLI command.
+    type: string
+    x-google-marketplace:
+      type: STRING
+  envRenderSecret.SYNTHESIZED_KEY:
+    title: Synthesized Licence Key
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
+
+  serviceAccount.name:
+    type: string
+    title: Synthesized TDK Service Account
+    x-google-marketplace:
+      type: SERVICE_ACCOUNT
+      serviceAccount:
+        description: Service account used by Synthesized TDK deployment
+        roles:
+          - type: ClusterRole
+            rulesType: CUSTOM
+            rules:
+              - apiGroups: [ "" ]
+                resources: [ "pods", "serviceaccounts" ]
+                verbs: [ "get", "list" ]
+              - apiGroups: [ "extensions" ]
+                resources: [ "deployments" ]
+                verbs: [ "get", "list" ]
+              - apiGroups: [ "apps" ]
+                resources: [ "deployments" ]
+                verbs: [ "get", "list" ]
+              - apiGroups: [ "" ]
+                resources: [ "pods/exec" ]
+                verbs: [ "create", "get" ]
+  resources.limits.cpu:
+    type: string
+    default: null
+    title: CPU limit for each server instance
+    description: Not set by default. If you'd like a custom value, you can specify an override here.
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  resources.limits.memory:
+    type: string
+    default: null
+    title: Memory limit for each server instance
+    description: Not set by default. If you'd like a custom value, you can specify an override here.
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  certificate:
+    type: string
+    x-google-marketplace:
+      type: TLS_CERTIFICATE
+      tlsCertificate:
+        generatedProperties:
+          base64EncodedPrivateKey: tls.base64EncodedPrivateKey
+          base64EncodedCertificate: tls.base64EncodedCertificate
+
+required:
+  - name
+  - namespace

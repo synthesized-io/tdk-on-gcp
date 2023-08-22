@@ -1,0 +1,15 @@
+actions:
+  - name: kubectl smoke test
+    bashTest:
+      script: kubectl version
+      expect:
+        exitCode:
+          equals: 0
+  - name: Check cronjob
+    bashTest:
+      script: |
+        kubectl get cronjob ${APP_INSTANCE_NAME}-synthesized-tdk-cron
+      expect:
+        exitCode:
+          equals: 0
+  
