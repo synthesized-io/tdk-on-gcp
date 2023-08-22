@@ -62,8 +62,7 @@ gcloud auth configure-docker
 
 #### Creating a Google Kubernetes Engine (GKE) cluster
 
-Create a new cluster from the command line. Please note that the BigQuery scope is required.
-You can change values of the properties CLUSTER and ZONE.
+Create a new cluster from the command line. You can change values of the properties CLUSTER and ZONE.
 
 ```shell
 export CLUSTER=tdk-cluster
