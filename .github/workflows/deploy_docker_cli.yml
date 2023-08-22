@@ -5,8 +5,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - 'fix-ci'
 
 env:
   REGISTRY: gcr.io/synthesized-marketplace-public
@@ -54,13 +52,10 @@ jobs:
 
       - name: Push image from Docker Hub to GHCR
         run: |
-          docker_cmd="docker buildx imagetools create"
           tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
-          echo "$tags"
-          
           IFS=' ' read -ra tags_array <<< "$tags"
           
-          echo "$tags_array"
+          docker_cmd="docker buildx imagetools create"
           for tag in "${tags_array[@]}"; do
             docker_cmd+=" --tag $tag"
           done
@@ -68,11 +63,9 @@ jobs:
           docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}"
           
           echo "$docker_cmd"
-#          eval "$docker_cmd"
-
+          eval "$docker_cmd"
 
   build-and-push-deployer:
-    if: ${{ contains(github.ref_name, '!') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -119,7 +112,6 @@ jobs:
 
 
   build-and-push-tester:
-    if: ${{ contains(github.ref_name, '!') }} # Only run on final tags, i.e, "1.14.0" NOT "1.14.0-rc1"
     runs-on: ubuntu-latest
     permissions:
       contents: read
