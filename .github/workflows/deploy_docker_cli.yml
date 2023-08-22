@@ -52,7 +52,7 @@ jobs:
 
       - name: Push image from Docker Hub to GHCR
         run: |
-          tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
+          tags=$(echo "${{ steps.gcr-meta.outputs.json }}" | jq -r '.tags | join(" ")')
           IFS=' ' read -ra tags_array <<< "$tags"
           
           docker_cmd="docker buildx imagetools create"
