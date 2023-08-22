@@ -56,7 +56,12 @@ jobs:
         run: |
           docker_cmd="docker buildx imagetools create"
           tags=${{ steps.gcr-meta.outputs.tags }}
-          for tag in "${tags[@]}"; do
+          echo "$tags"
+          
+          IFS='\т' read -r -a tags_array <<< "$string"
+          
+          echo "$tags_array"
+          for tag in "${tags_array[@]}"; do
             docker_cmd+=" --tag $tag"
           done
           
