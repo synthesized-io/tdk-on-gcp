@@ -74,6 +74,10 @@ spec:
                       key: entitlement-id
                 - name: GCP_MARKETPLACE_ENABLED
                   value: "true"
+                - name: TDK_GCP_LICENSE_ENABLED
+                  value: "true"
+                - name: TDK_GCP_ENABLED
+                  value: "true"
               envFrom:
                 - secretRef:
                   {{- if .Values.secretRef}}
