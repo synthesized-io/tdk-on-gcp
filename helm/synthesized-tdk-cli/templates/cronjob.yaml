@@ -72,6 +72,8 @@ spec:
                     secretKeyRef:
                       name: {{ .Values.reportingSecret }}
                       key: entitlement-id
+                - name: GCP_MARKETPLACE_ENABLED
+                  value: "true"
               envFrom:
                 - secretRef:
                   {{- if .Values.secretRef}}
