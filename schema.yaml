@@ -30,80 +30,80 @@ properties:
       type: NAMESPACE
 
   env.SYNTHESIZED_USERCONFIG_FILE:
-    title: Configuration file path. Analogue of the CLI --config-file option.
+    title: Configuration file path
     type: string
     x-google-marketplace:
       type: STRING
   env.SYNTHESIZED_USERCONFIG:
-    title: Configuration YAML. If set, the variable SYNTHESIZED_USERCONFIG_FILE is ignored.
+    title: Configuration YAML
     type: string
     x-google-marketplace:
       type: STRING
   env.SYNTHESIZED_INVENTORY_FILE:
-    title: Inventory file with information about using data sources. Analogue of the CLI --inventory-file option.
+    title: Inventory file with data sources
     type: string
     x-google-marketplace:
       type: STRING
   env.SYNTHESIZED_INVENTORY:
-    title: Inventory YAML. If set, the variable SYNTHESIZED_INVENTORY_FILE is ignored.
+    title: Inventory YAML
     type: string
     x-google-marketplace:
       type: STRING
 
   env.SYNTHESIZED_INPUT_URL:
-    title: JDBC URL to the INPUT database. Analogue of the CLI --input-url option.
+    title: JDBC URL to the INPUT database
     type: string
     x-google-marketplace:
       type: STRING
   envRenderSecret.SYNTHESIZED_INPUT_USERNAME:
-    title: Input username, default to null. Analogue of the CLI --input-username option.
+    title: Input username
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_USERNAME_SECRET:
-    title: Input username secret in JSON format, default to null. Analogue of the CLI --input-username-secret option.
+    title: Input username secret in JSON format
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_PASSWORD:
-    title: Input password, default to null. Analogue of the CLI --input-password option.
+    title: Input password
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_PASSWORD_SECRET:
-    title: Input password secret in JSON format, default to null. Analogue of the CLI --input-password-secret option.
+    title: Input password secret in JSON format
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
 
   env.SYNTHESIZED_OUTPUT_URL:
-    title: JDBC URL to the OUTPUT database. Analogue of the CLI --output-url option.
+    title: JDBC URL to the OUTPUT database
     type: string
     x-google-marketplace:
       type: STRING
   envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME:
-    title: Output username, default to null. Analogue of the CLI --output-username option.
+    title: Output username
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME_SECRET:
-    title:  Output username secret in JSON format, default to null. Analogue of the CLI --output-username-secret option.
+    title:  Output username secret in JSON format
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD:
-    title: Output password, default to null. Analogue of the CLI --output-password option.
+    title: Output password
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD_SECRET:
-    title: Output password secret in JSON format, default to null. Analogue of the CLI --output-password-secret option.
+    title: Output password secret in JSON format
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
 
   env.SYNTHESIZED_COMMAND:
-    title: Analogue of the CLI command.
+    title: Additional CLI parameters
     type: string
     x-google-marketplace:
       type: STRING
