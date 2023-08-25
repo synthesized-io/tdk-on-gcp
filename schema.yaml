@@ -31,6 +31,7 @@ properties:
 
   env.SYNTHESIZED_USERCONFIG_FILE:
     title: Configuration file path
+    default: gs://tdk_public_configuration_files/config_masking.tdk.yaml
     type: string
     x-google-marketplace:
       type: STRING
