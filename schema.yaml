@@ -94,6 +94,7 @@ properties:
 
   schedule:
     title: Schedule fetch time (never by default)
+    default: "* * 31 2 *"
     description: |
       More information at: https://crontab.guru/#*_*_31_2_*
     type: string
