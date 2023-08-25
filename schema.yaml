@@ -34,18 +34,8 @@ properties:
     type: string
     x-google-marketplace:
       type: STRING
-  env.SYNTHESIZED_USERCONFIG:
-    title: Configuration YAML
-    type: string
-    x-google-marketplace:
-      type: STRING
   env.SYNTHESIZED_INVENTORY_FILE:
     title: Inventory file with data sources
-    type: string
-    x-google-marketplace:
-      type: STRING
-  env.SYNTHESIZED_INVENTORY:
-    title: Inventory YAML
     type: string
     x-google-marketplace:
       type: STRING
@@ -102,16 +92,13 @@ properties:
     x-google-marketplace:
       type: MASKED_FIELD
 
-  env.SYNTHESIZED_COMMAND:
-    title: Additional CLI parameters
+  schedule:
+    title: Schedule fetch time (never by default)
+    description: |
+      More information at: https://crontab.guru/#*_*_31_2_*
     type: string
     x-google-marketplace:
       type: STRING
-  envRenderSecret.SYNTHESIZED_KEY:
-    title: Synthesized Licence Key
-    type: string
-    x-google-marketplace:
-      type: MASKED_FIELD
 
   reportingSecret:
     type: string
