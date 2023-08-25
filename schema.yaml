@@ -97,14 +97,14 @@ properties:
     x-google-marketplace:
       type: REPORTING_SECRET
 
-  schedule:
-    type: string
-    default: "* * 31 2 *"
-    description: >
-      Schedule fetch time (never by default)
-      More information at: https://crontab.guru/#*_*_31_2_*
-    x-google-marketplace:
-      type: STRING
+  # schedule:
+  #   type: string
+  #   default: "* * 31 2 *"
+  #   description: >
+  #     Schedule fetch time (never by default)
+  #     More information at: https://crontab.guru/#*_*_31_2_*
+  #   x-google-marketplace:
+  #     type: STRING
 
   serviceAccount.name:
     type: string
