@@ -12,7 +12,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-schedule: {{ .Values.schedule }}
+schedule: "* * 31 2 *"
 # -- (int) Number of successful cronjobs to retain.
 cronJobLimit: 3
 # -- (int) Number of failed cronjobs to retain.
