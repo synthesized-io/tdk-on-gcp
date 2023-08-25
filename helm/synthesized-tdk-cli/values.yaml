@@ -72,7 +72,6 @@ envRenderSecret: {}
 #  SYNTHESIZED_INPUT_PASSWORD:
 #  SYNTHESIZED_OUTPUT_USERNAME:
 #  SYNTHESIZED_OUTPUT_PASSWORD:
-#  SYNTHESIZED_KEY:
 
 # -- Pass the configuration directives and envRenderSecret through Helm's templating engine.
 ## ref: https://helm.sh/docs/developing_charts/#using-the-tpl-function
