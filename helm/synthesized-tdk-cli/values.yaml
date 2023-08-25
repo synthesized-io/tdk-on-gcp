@@ -12,9 +12,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# -- Schedule fetch time (never by default)
-# More information at: https://crontab.guru/#*_*_31_2_*
-schedule: {{ .Values.schedule }}
 # -- (int) Number of successful cronjobs to retain.
 cronJobLimit: 3
 # -- (int) Number of failed cronjobs to retain.
