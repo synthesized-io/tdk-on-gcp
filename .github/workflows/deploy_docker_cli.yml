@@ -52,9 +52,13 @@ jobs:
       - name: Push image from Docker Hub to GHCR
         run: |
           echo "$DOCKER_METADATA_OUTPUT_JSON"
+
+          docker pull synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
  
-#          tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
-#          IFS=' ' read -ra tags_array <<< "$tags"
+          tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
+          IFS=' ' read -ra tags_array <<< "$tags"
+
+          docker images
 #
 #          docker_cmd="docker buildx imagetools create"
 #          for tag in "${tags_array[@]}"; do
