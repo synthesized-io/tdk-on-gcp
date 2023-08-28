@@ -61,10 +61,9 @@ jobs:
           docker_cmd="docker buildx imagetools create"
           for tag in "${tags_array[@]}"; do
             docker tag synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }} $tag
+            docker push synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
           done
 
-          docker images
-#
 #          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}"
 #
 #          echo "$docker_cmd"
