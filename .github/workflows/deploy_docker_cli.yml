@@ -10,6 +10,7 @@ env:
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
   FROM_TAG: v1.32.7
+  PLATFORM: linux/amd64
   MARKETPLACE_TOOLS_TAG: 0.11.8
 
 concurrency:
@@ -53,7 +54,7 @@ jobs:
         run: |
           echo "$DOCKER_METADATA_OUTPUT_JSON"
 
-          docker pull synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
+          docker pull synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }} --platform ${{ env.PLATFORM }}
  
           tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
           IFS=' ' read -ra tags_array <<< "$tags"
