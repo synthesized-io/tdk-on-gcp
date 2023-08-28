@@ -63,7 +63,7 @@ jobs:
             echo "docker tag ..."
             docker tag synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }} $tag
             echo "docker push ..."
-            docker push synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}
+            docker push $tag
           done
 
 #          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}"
