@@ -58,12 +58,12 @@ jobs:
           tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
           IFS=' ' read -ra tags_array <<< "$tags"
 
+          docker_cmd="docker buildx imagetools create"
+          for tag in "${tags_array[@]}"; do
+            docker tag synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }} $tag
+          done
+
           docker images
-#
-#          docker_cmd="docker buildx imagetools create"
-#          for tag in "${tags_array[@]}"; do
-#            docker_cmd+=" --tag $tag"
-#          done
 #
 #          docker_cmd+=" synthesizedio/synthesized-tdk-cli:${{ env.FROM_TAG }}"
 #
