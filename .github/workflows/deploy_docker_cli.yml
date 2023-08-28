@@ -18,41 +18,41 @@ concurrency:
 
 jobs:
 
- push-tdk:
-   runs-on: ubuntu-latest
-   permissions:
-     contents: read
-     packages: write
-   steps:
-     - name: Checkout repository
-       uses: actions/checkout@v3
-
-     - name: Authenticate GCloud
-       uses: google-github-actions/auth@v1
-       with:
-         credentials_json: ${{ secrets.GCP_KEY }}
-
-     - name: Setup GCloud SDK
-       uses: google-github-actions/setup-gcloud@v1
-
-     - name: Authorize Docker push
-       run: gcloud auth configure-docker
-
-     - name: Extract metadata
-       id: gcr-meta
-       uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
-       with:
-         images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}
-         flavor: |
-           latest=false
-         tags: |
-           type=semver,pattern={{version}}
-           type=semver,pattern={{major}}.{{minor}}
-
-     - name: Push image from Docker Hub to GHCR
-       run: |
-         echo "$DOCKER_METADATA_OUTPUT_JSON"
-
+  push-tdk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+ 
+      - name: Authenticate GCloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_KEY }}
+ 
+      - name: Setup GCloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+ 
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+ 
+      - name: Extract metadata
+        id: gcr-meta
+        uses: docker/metadata-action@ef25336f420be2d1a49205baf41a9b88712a65a1
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.APP_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+ 
+      - name: Push image from Docker Hub to GHCR
+        run: |
+          echo "$DOCKER_METADATA_OUTPUT_JSON"
+ 
 #          tags=$(echo "$DOCKER_METADATA_OUTPUT_JSON" | jq -r '.tags | join(" ")')
 #          IFS=' ' read -ra tags_array <<< "$tags"
 #
