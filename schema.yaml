@@ -30,65 +30,89 @@ properties:
       type: NAMESPACE
 
   env.SYNTHESIZED_USERCONFIG_FILE:
-    title: Configuration file path
+    title: --config-file
     default: gs://tdk_public_configuration_files/config_masking.tdk.yaml
+    description: >
+      Configuration file path on GCS.
     type: string
     x-google-marketplace:
       type: STRING
   env.SYNTHESIZED_INVENTORY_FILE:
-    title: Inventory file with data sources
+    title: --inventory-file
+    description: >
+      Inventory file with information about using data sources.
     type: string
     x-google-marketplace:
       type: STRING
 
   env.SYNTHESIZED_INPUT_URL:
-    title: JDBC URL to the INPUT database
+    title: --input-url
+    description: >
+      JDBC URL to the INPUT database.
     type: string
     x-google-marketplace:
       type: STRING
   envRenderSecret.SYNTHESIZED_INPUT_USERNAME:
-    title: Input username
+    title: --input-username
+    description: >
+      Input username, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_USERNAME_SECRET:
-    title: Input username secret in JSON format
+    title: --input-username-secret
+    description: >
+      Input username secret in JSON format, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_PASSWORD:
-    title: Input password
+    title: --input-password
+    description: >
+      Input password, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_INPUT_PASSWORD_SECRET:
-    title: Input password secret in JSON format
+    title: --input-password-secret
+    description: >
+      Input password secret in JSON format, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
 
   env.SYNTHESIZED_OUTPUT_URL:
-    title: JDBC URL to the OUTPUT database
+    title: --output-url
+    description: >
+      JDBC URL to the OUTPUT database.
     type: string
     x-google-marketplace:
       type: STRING
   envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME:
-    title: Output username
+    title: --output-username
+    description: >
+      Output username, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_USERNAME_SECRET:
-    title:  Output username secret in JSON format
+    title: --output-username-secret
+    description: >
+      Output username secret in JSON format, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD:
-    title: Output password
+    title: --output-password
+    description: >
+      Output password, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
   envRenderSecret.SYNTHESIZED_OUTPUT_PASSWORD_SECRET:
-    title: Output password secret in JSON format
+    title: --output-password-secret
+    description: >
+      Output password secret in JSON format, default to null.
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
@@ -154,3 +178,7 @@ properties:
 required:
   - name
   - namespace
+  - env.SYNTHESIZED_USERCONFIG_FILE
+  - env.SYNTHESIZED_INPUT_URL
+  - env.SYNTHESIZED_OUTPUT_URL
+  - schedule

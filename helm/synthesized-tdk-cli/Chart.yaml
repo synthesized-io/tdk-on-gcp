@@ -1,6 +1,6 @@
 apiVersion: v2
 name: synthesized-tdk
-description: TDK is a DevOps' best friend for database masking, subsetting and generation.
+description: Populate non-production environments with production-like data.
 
 # A chart can be either an 'application' or a 'library' chart.
 #

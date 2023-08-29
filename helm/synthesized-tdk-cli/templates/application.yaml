@@ -13,7 +13,7 @@ spec:
     type: SDK
     version: "{{ .Values.image.tag }}"
     description: |-
-      TDK is a DevOps' best friend for database masking, subsetting and generation.
+      Populate non-production environments with production-like data.
     maintainers:
       - name: Synthesized
         url: https://www.synthesized.io/
@@ -21,7 +21,7 @@ spec:
       - description: 'User Guide'
         url: https://github.com/synthesized-io/tdk-on-gcp/blob/main/README.md
     notes: |-
-      # Some notes ...
+      You can learn more about TDK by clicking on the link - https://docs.synthesized.io/tdk/latest/user_guide/getting_started/what_is_tdk
   selector:
     matchLabels:
       name: {{ .Release.Name }}
