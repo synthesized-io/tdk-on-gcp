@@ -178,7 +178,4 @@ properties:
 required:
   - name
   - namespace
-  - env.SYNTHESIZED_USERCONFIG_FILE
-  - env.SYNTHESIZED_INPUT_URL
-  - env.SYNTHESIZED_OUTPUT_URL
   - schedule
