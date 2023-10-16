@@ -1,6 +1,6 @@
 ARG MARKETPLACE_TOOLS_TAG
 
-FROM marketplace.gcr.io/google/c2d-debian11 AS build
+FROM marketplace.gcr.io/google/c2d-debian11:11.5 AS build
 
 ARG CHART_NAME
 
