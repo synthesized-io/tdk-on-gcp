@@ -9,9 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget -q -O /bin/kubectl \
-    https://storage.googleapis.com/kubernetes-release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
-      && chmod 755 /bin/kubectl
+RUN stable_version=$(wget -qO- https://storage.googleapis.com/kubernetes-release/release/stable.txt) \
+    && wget -O /bin/kubectl "https://storage.googleapis.com/kubernetes-release/release/${stable_version}/bin/linux/amd64/kubectl" \
+    && chmod 755 /bin/kubectl
 
 COPY tests/basic-suite.yaml /tests/basic-suite.yaml
 COPY --chmod=0755 tester.sh /tester.sh
