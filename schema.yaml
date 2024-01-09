@@ -119,9 +119,9 @@ properties:
 
   schedule:
     title: Schedule fetch time (never by default)
-    default: "* * 31 2 *"
+    default: "0 0 31 2 *"
     description: |
-      More information at: https://crontab.guru/#*_*_31_2_*
+      More information at: https://crontab.guru/#0_0_31_2_*
     type: string
     x-google-marketplace:
       type: STRING
