@@ -16,7 +16,7 @@ spec:
     spec:
       parallelism: 1 # How many pods will be instantiated at once
       completions: 1 # How many containers of the job are instantiated one after the other (sequentially) inside the pod
-      backoffLimit: 3 # Maximum pod restarts in case of failure
+      backoffLimit: 10 # Maximum pod restarts in case of failure
       ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished }}
       template:
         metadata:
