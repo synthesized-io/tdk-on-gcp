@@ -1,6 +1,5 @@
 apiVersion: app.k8s.io/v1beta1
 kind: Application
-icon: https://avatars.githubusercontent.com/u/42060457
 metadata:
   name: {{ .Release.Name }}
   namespace: "{{ .Release.Namespace }}"
