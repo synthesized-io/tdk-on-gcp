@@ -131,29 +131,6 @@ properties:
     x-google-marketplace:
       type: REPORTING_SECRET
 
-  serviceAccount.name:
-    type: string
-    title: Synthesized TDK Service Account
-    x-google-marketplace:
-      type: SERVICE_ACCOUNT
-      serviceAccount:
-        description: Service account used by Synthesized TDK deployment
-        roles:
-          - type: ClusterRole
-            rulesType: CUSTOM
-            rules:
-              - apiGroups: [ "" ]
-                resources: [ "pods", "serviceaccounts" ]
-                verbs: [ "get", "list" ]
-              - apiGroups: [ "extensions" ]
-                resources: [ "deployments" ]
-                verbs: [ "get", "list" ]
-              - apiGroups: [ "apps" ]
-                resources: [ "deployments" ]
-                verbs: [ "get", "list" ]
-              - apiGroups: [ "" ]
-                resources: [ "pods/exec" ]
-                verbs: [ "create", "get" ]
   resources.limits.cpu:
     type: string
     default: null
