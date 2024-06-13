@@ -7,7 +7,7 @@ on:
       - '*'
 
 env:
-  FROM_TAG: v1.51.0
+  FROM_TAG: v1.57.0
   
   REGISTRY: gcr.io/synthesized-marketplace-public
   APP_NAME: synthesized-tdk-cli
